@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>CS2 O‘zbek Bazar</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body style="font-family:Arial;padding:20px;background:#0f172a;color:white">
+  <h2>CS2 O‘zbek Bazar 🛒</h2>
+  <p>Mini App ishlayapti.</p>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    const user = tg.initDataUnsafe?.user;
+
+    if (user) {
+      fetch("http://localhost:3000/api/track/open", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          telegramId: user.id,
+          username: user.username || ""
+        })
+      });
+    }
+  </script>
+</body>
+</html>
