@@ -6,6 +6,24 @@
   <title>CS2 O‘zbek Bazar</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
+
+    /* 🔥 SPARKS BACKGROUND */
+    #sparks{
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: .55;
+    }
+    header, .wrap, nav{
+      position: relative;
+      z-index: 2;
+    }
+
+
+
     :root{
       --bg:#0b1220; --card:#111b2e; --muted:#94a3b8; --text:#e5e7eb;
       --accent:#22c55e; --danger:#ef4444; --border:#1f2a44; --warn:#f59e0b;
@@ -63,7 +81,11 @@
   </style>
 </head>
 <body>
+  <canvas id="sparks"></canvas>
 <header>
+
+  
+
   <div class="title">🛒 CS2 O‘zbek Bazar</div>
   <div id="who" class="sub">Telegram bilan oching</div>
 </header>
@@ -891,6 +913,90 @@ Backend qo‘shilganda real user statistikasi chiqadi.`;
   // start
   renderAll();
   loadSkinsIfNeeded();
+
+
+  // 🔥 SPARKS BACKGROUND
+  (function sparksBackground(){
+    const c = document.getElementById('sparks');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+
+    let W = 0, H = 0, dpr = 1;
+    const sparks = [];
+    const MAX = 120;
+
+    function resize(){
+      dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
+      W = Math.floor(window.innerWidth);
+      H = Math.floor(window.innerHeight);
+      c.width = W * dpr;
+      c.height = H * dpr;
+      c.style.width = W + 'px';
+      c.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function rand(a,b){ return a + Math.random()*(b-a); }
+
+    function spawn(n=3){
+      for (let i=0; i<n; i++){
+        sparks.push({
+          x: rand(0, W),
+          y: rand(H*0.6, H),
+          vx: rand(-0.25, 0.25),
+          vy: rand(-1.9, -0.7),
+          r: rand(0.8, 2.2),
+          life: rand(40, 110),
+          hue: rand(28, 45),
+          a: rand(0.35, 0.9)
+        });
+      }
+      while (sparks.length > MAX) sparks.shift();
+    }
+
+    function step(){
+      ctx.clearRect(0,0,W,H);
+      ctx.globalCompositeOperation = 'lighter';
+
+      for (let i=sparks.length-1; i>=0; i--){
+        const s = sparks[i];
+        s.x += s.vx;
+        s.y += s.vy;
+        s.vy -= 0.006;
+        s.vx += rand(-0.01, 0.01);
+        s.life -= 1;
+
+        const alpha = Math.max(0, s.life/110) * s.a;
+
+        ctx.beginPath();
+        ctx.fillStyle = `hsla(${s.hue}, 100%, 60%, ${alpha})`;
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.strokeStyle = `hsla(${s.hue}, 100%, 55%, ${alpha*0.6})`;
+        ctx.lineWidth = 1;
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(s.x - s.vx*8, s.y - s.vy*8);
+        ctx.stroke();
+
+        if (s.life <= 0 || s.y < -20 || s.x < -50 || s.x > W+50){
+          sparks.splice(i, 1);
+        }
+      }
+
+      ctx.globalCompositeOperation = 'source-over';
+      spawn(2);
+      requestAnimationFrame(step);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    spawn(40);
+    step();
+  })();
+
+
 </script>
 </body>
 </html>
