@@ -80,7 +80,7 @@
         <select id="cat">
           <option value="">Kategoriya: Hammasi</option>
           <option>AK-47</option><option>AWP</option><option>Knife</option><option>Gloves</option>
-          <option>Pistol</option><option>SMG</option><option>Rifle</option>
+          <option>Pistol</option><option>SMG</option><option>Rifle</option><option>Other</option>
         </select>
       </div>
       <div style="width:170px;min-width:170px">
@@ -180,7 +180,7 @@
               <div class="small">1 USD = nechchi so‘m?</div>
               <input id="usdRate" type="number" placeholder="Masalan 12600" />
               <div style="height:10px"></div>
-              <div class="small">Ustama % (white marketdan ozgina qimmat)</div>
+              <div class="small">Ustama %</div>
               <input id="markup" type="number" placeholder="Masalan 7" />
             </div>
             <div>
@@ -190,6 +190,10 @@
               <button class="btn" onclick="savePricing()">Saqlash</button>
               <div style="height:10px"></div>
               <div id="pricingInfo" class="small"></div>
+              <div class="hr"></div>
+              <button class="btn2" onclick="reloadSkinsFromJson()">🔄 skins.json dan qayta yuklash</button>
+              <div style="height:10px"></div>
+              <div class="small">Agar eski skinlar qolsa: shu tugma bosiladi.</div>
             </div>
           </div>
         </div>
@@ -217,9 +221,7 @@
         <div id="admin_import" class="panel hidden" style="margin-top:12px">
           <div class="sectionTitle" style="margin:0 0 8px">📥 Bulk import (JSON)</div>
           <div class="small">
-            Format: <span class="mono">[{id,name,cat,wear,usd,img}]</span><br/>
-            Misol:
-            <span class="mono">{"id":"10","name":"AWP | Dragon Lore","cat":"AWP","wear":"FN","usd":12000,"img":""}</span>
+            Format: <span class="mono">[{id,name,cat,wear,usd,img}]</span>
           </div>
           <div class="hr"></div>
 
@@ -244,7 +246,7 @@
         <div id="admin_trust" class="panel hidden" style="margin-top:12px">
           <div class="sectionTitle" style="margin:0 0 8px">✅ Ishonch postlari (admin)</div>
           <div class="small">
-            Bu postlar “Ishonch lentasi”da chiqadi. Manba qayerdan ekanini ko‘rsatmaydi.
+            Bu postlar “Ishonch lentasi”da chiqadi. Manbani ko‘rsatmaydi.
           </div>
           <div class="hr"></div>
 
@@ -256,11 +258,7 @@
               <button class="btn" onclick="addTrustPost()">Post qo‘shish</button>
             </div>
             <div>
-              <div class="small">Boshqarish</div>
-              <div class="chips">
-                <span class="chip">✅ Approved ko‘rinadi</span>
-                <span class="chip">⏳ Pending faqat admin</span>
-              </div>
+              <div class="small">Pending postlar</div>
               <div class="hr"></div>
               <div id="trustPending" class="list"></div>
               <div id="trustNoPending" class="small hidden">Pending post yo‘q.</div>
@@ -272,11 +270,11 @@
         <div id="admin_broadcast" class="panel hidden" style="margin-top:12px">
           <div class="sectionTitle" style="margin:0 0 8px">📣 Broadcast tayyorlash</div>
           <div class="small">
-            Backend/botsiz: bu yerda matnni tayyorlab, <span class="mono">Copy</span> qilib Telegram’da yuborasiz.
+            Bu yerda matnni tayyorlab, <span class="mono">Copy</span> qilib Telegram’da yuborasiz.
           </div>
           <div class="hr"></div>
 
-          <textarea id="bcText" placeholder="Masalan: Bugun top AWP lar arzon! 🤑"></textarea>
+          <textarea id="bcText" placeholder="Masalan: Bugun top skinlar arzon! 🤑"></textarea>
           <div style="height:10px"></div>
           <div class="row">
             <button class="btn" style="flex:1" onclick="copyBroadcast()">📋 Copy</button>
@@ -295,8 +293,8 @@
         <div id="admin_stats" class="panel hidden" style="margin-top:12px">
           <div class="sectionTitle" style="margin:0 0 8px">📊 Statistika (demo)</div>
           <div class="small">
-            Backend ulanmaguncha umumiy user sonini real ko‘rsatib bo‘lmaydi.<br/>
-            Hozircha demo: sizning qurilmangizdagi statistikalar.
+            Backend ulanmaguncha real user soni bo‘lmaydi.<br/>
+            Hozircha: shu qurilmadagi statistikalar.
           </div>
           <div class="hr"></div>
           <div id="statsBox" class="small"></div>
@@ -350,23 +348,18 @@
     user ? `@${user.username || 'user'} • ID: ${user.id}` : 'Telegram bilan oching (Menu orqali)';
 
   // ---------- Storage keys ----------
-  const FKEY = 'cs2_uz_favs_v2';
-  const SKEY = 'cs2_uz_skins_v2';
-  const PKEY = 'cs2_uz_pricing_v2';
-  const RKEY = 'cs2_uz_reviews_v2';
-  const TKEY = 'cs2_uz_trust_v2';
-  const LSTAT = 'cs2_uz_localstat_v1';
+  const FKEY = 'cs2_uz_favs_v3';
+  const SKEY = 'cs2_uz_skins_v3';
+  const PKEY = 'cs2_uz_pricing_v3';
+  const RKEY = 'cs2_uz_reviews_v3';
+  const TKEY = 'cs2_uz_trust_v3';
+  const LSTAT = 'cs2_uz_localstat_v2';
 
-  // ---------- Default data ----------
+  // ---------- Defaults ----------
   const defaultSkins = [
     { id:'1', name:'AK-47 | Redline', cat:'AK-47', wear:'FT', usd: 10, img:'' },
-    { id:'2', name:'AWP | Asiimov', cat:'AWP', wear:'FT', usd: 75, img:'' },
-    { id:'3', name:'Karambit | Doppler', cat:'Knife', wear:'FN', usd: 650, img:'' },
-    { id:'4', name:'Driver Gloves | Lunar Weave', cat:'Gloves', wear:'MW', usd: 520, img:'' },
-    { id:'5', name:'USP-S | Kill Confirmed', cat:'Pistol', wear:'MW', usd: 95, img:'' },
-    { id:'6', name:'M4A1-S | Printstream', cat:'Rifle', wear:'FT', usd: 140, img:'' },
+    { id:'2', name:'AWP | Asiimov', cat:'AWP', wear:'FT', usd: 75, img:'' }
   ];
-
   const defaultPricing = { usdRate: 12600, markup: 7, roundTo: 0 };
 
   // ---------- JSON helpers ----------
@@ -377,14 +370,13 @@
   function saveJSON(key, value){ localStorage.setItem(key, JSON.stringify(value)); }
 
   // ---------- State ----------
-  let skins = loadJSON(SKEY, defaultSkins);
   let pricing = loadJSON(PKEY, defaultPricing);
   let reviews = loadJSON(RKEY, []);
-  let trust = loadJSON(TKEY, []); // {id,text,status,at}
+  let trust = loadJSON(TKEY, []);
+  let skins = loadJSON(SKEY, null); // cache bo‘lsa shu
 
-  // local stats (demo)
+  // local stats demo
   let localStat = loadJSON(LSTAT, { opens:0, detailViews:0, buyClicks:0, lastAt:null });
-
   function bumpStat(key){
     localStat[key] = (localStat[key]||0) + 1;
     localStat.lastAt = new Date().toISOString();
@@ -393,11 +385,13 @@
   bumpStat('opens');
 
   // ---------- Helpers ----------
+  function escapeHTML(s){
+    return (s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+  }
   function fmtUZS(n){
     try { return new Intl.NumberFormat('uz-UZ').format(n) + " so‘m"; }
     catch { return n + " so‘m"; }
   }
-
   function calcUZS(usd){
     const rate = Number(pricing.usdRate) || 12600;
     const m = Number(pricing.markup) || 0;
@@ -405,6 +399,45 @@
     const r = Number(pricing.roundTo) || 0;
     if (r > 0) x = Math.round(x / r) * r;
     return x;
+  }
+
+  // ---------- Load skins.json (agar cache bo‘sh bo‘lsa) ----------
+  async function loadSkinsIfNeeded(){
+    if (skins && Array.isArray(skins) && skins.length) return;
+
+    try {
+      const res = await fetch('./skins.json', { cache: 'no-store' });
+      const data = await res.json();
+      if (Array.isArray(data) && data.length) {
+        skins = data.map(normalizeSkin).filter(Boolean);
+        saveJSON(SKEY, skins);
+        renderAll();
+        return;
+      }
+    } catch (e) {}
+
+    skins = defaultSkins;
+    saveJSON(SKEY, skins);
+    renderAll();
+  }
+
+  function normalizeSkin(it){
+    if (!it) return null;
+    const id = String(it.id ?? '').trim();
+    const name = String(it.name ?? '').trim();
+    const cat = String(it.cat ?? '').trim() || 'Other';
+    const wear = String(it.wear ?? '').trim() || 'FT';
+    const usd = Number(it.usd);
+    const img = it.img ? String(it.img).trim() : '';
+    if (!id || !name || !Number.isFinite(usd)) return null;
+    return { id, name, cat, wear, usd, img };
+  }
+
+  function reloadSkinsFromJson(){
+    localStorage.removeItem(SKEY);
+    skins = null;
+    loadSkinsIfNeeded();
+    alert("🔄 skins.json qayta yuklandi");
   }
 
   // ---------- Favorites ----------
@@ -473,7 +506,8 @@
 
   function renderHome(){
     const grid = document.getElementById('grid');
-    const filtered = applyFilters(skins);
+    const list = (skins && Array.isArray(skins)) ? skins : defaultSkins;
+    const filtered = applyFilters(list);
     grid.innerHTML = filtered.map(cardHTML).join('') || `<div class="small">Hech narsa topilmadi.</div>`;
   }
 
@@ -481,9 +515,10 @@
     const favGrid = document.getElementById('favGrid');
     const favEmpty = document.getElementById('favEmpty');
     const favs = loadFavs();
-    const list = skins.filter(s => favs.includes(s.id));
-    favEmpty.classList.toggle('hidden', list.length !== 0);
-    favGrid.innerHTML = list.map(cardHTML).join('');
+    const list = (skins && Array.isArray(skins)) ? skins : [];
+    const picked = list.filter(s => favs.includes(s.id));
+    favEmpty.classList.toggle('hidden', picked.length !== 0);
+    favGrid.innerHTML = picked.map(cardHTML).join('');
   }
 
   // ---------- Detail ----------
@@ -495,7 +530,8 @@
     show('detail');
   }
   function renderDetail(id){
-    const s = skins.find(x => x.id === id);
+    const list = (skins && Array.isArray(skins)) ? skins : [];
+    const s = list.find(x => x.id === id);
     if (!s) return;
     document.getElementById('dImg').innerHTML = s.img ? `<img src="${s.img}" style="width:100%;height:100%;object-fit:cover;border-radius:12px"/>` : 'Rasm';
     document.getElementById('dName').textContent = s.name;
@@ -513,11 +549,14 @@
 
   function buyNow(){
     bumpStat('buyClicks');
-    const s = skins.find(x => x.id === currentId);
+    const list = (skins && Array.isArray(skins)) ? skins : [];
+    const s = list.find(x => x.id === currentId);
     if (!s) return;
+
     const uzs = fmtUZS(calcUZS(Number(s.usd)||0));
     const uname = user?.username ? '@'+user.username : '(username yo‘q)';
     const uid = user?.id ? user.id : '(id yo‘q)';
+
     const msg =
 `Salom admin!
 🛒 Skin: ${s.name}
@@ -526,6 +565,7 @@
 👤 User: ${uname} | ID: ${uid}
 
 Olishni xohlayman.`;
+
     openAdminChat(msg);
   }
 
@@ -631,12 +671,14 @@ Olishni xohlayman.`;
   // --- Skin edit ---
   function fillEditPick(){
     const sel = document.getElementById('editPick');
-    sel.innerHTML = skins.map(s => `<option value="${s.id}">${escapeHTML(s.name)} ($${s.usd})</option>`).join('');
+    const list = (skins && Array.isArray(skins)) ? skins : [];
+    sel.innerHTML = list.map(s => `<option value="${s.id}">${escapeHTML(s.name)} ($${s.usd})</option>`).join('');
     sel.onchange = () => loadEdit(sel.value);
-    if (skins[0]) loadEdit(skins[0].id);
+    if (list[0]) loadEdit(list[0].id);
   }
   function loadEdit(id){
-    const s = skins.find(x => x.id === id);
+    const list = (skins && Array.isArray(skins)) ? skins : [];
+    const s = list.find(x => x.id === id);
     if (!s) return;
     document.getElementById('editName').value = s.name;
     document.getElementById('editImg').value = s.img || '';
@@ -644,7 +686,8 @@ Olishni xohlayman.`;
   }
   function saveEdit(){
     const id = document.getElementById('editPick').value;
-    const s = skins.find(x => x.id === id);
+    const list = (skins && Array.isArray(skins)) ? skins : [];
+    const s = list.find(x => x.id === id);
     if (!s) return;
 
     const nm = document.getElementById('editName').value.trim();
@@ -655,6 +698,7 @@ Olishni xohlayman.`;
     s.img = im;
     if (Number.isFinite(usd) && usd > 0) s.usd = usd;
 
+    skins = list;
     saveJSON(SKEY, skins);
     renderAll();
     alert("✅ Skin saqlandi");
@@ -679,25 +723,19 @@ Olishni xohlayman.`;
       const arr = JSON.parse(text);
       if (!Array.isArray(arr)) throw new Error("JSON array bo‘lishi kerak");
 
+      let list = (skins && Array.isArray(skins) && skins.length) ? skins : [];
       let added = 0, updated = 0, skipped = 0;
 
       for (const it of arr){
-        if (!it || !it.id || !it.name || !it.cat || !it.wear || typeof it.usd === 'undefined') { skipped++; continue; }
+        const obj = normalizeSkin(it);
+        if (!obj) { skipped++; continue; }
 
-        const obj = {
-          id: String(it.id),
-          name: String(it.name),
-          cat: String(it.cat),
-          wear: String(it.wear),
-          usd: Number(it.usd) || 0,
-          img: it.img ? String(it.img) : ''
-        };
-
-        const idx = skins.findIndex(s => s.id === obj.id);
-        if (idx >= 0){ skins[idx] = obj; updated++; }
-        else { skins.push(obj); added++; }
+        const idx = list.findIndex(s => s.id === obj.id);
+        if (idx >= 0){ list[idx] = obj; updated++; }
+        else { list.push(obj); added++; }
       }
 
+      skins = list;
       saveJSON(SKEY, skins);
       renderAll();
       out.textContent = `✅ Import tugadi: qo‘shildi ${added}, update ${updated}, skip ${skipped}.`;
@@ -798,7 +836,6 @@ Olishni xohlayman.`;
       await navigator.clipboard.writeText(text);
       info.textContent = "✅ Copy bo‘ldi. Endi Telegram’da joylashtiring.";
     } catch {
-      // fallback
       const ta = document.getElementById('bcText');
       ta.focus(); ta.select();
       info.textContent = "✅ Endi Ctrl+C qiling (clipboard ruxsat bermadi).";
@@ -835,11 +872,7 @@ Backend qo‘shilganda real user statistikasi chiqadi.`;
     renderStats();
   }
 
-  // ---------- Trust/feed + reviews ----------
-  function escapeHTML(s){
-    return (s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
-  }
-
+  // ---------- Render all ----------
   function renderAll(){
     renderHome();
     renderFav();
@@ -857,6 +890,7 @@ Backend qo‘shilganda real user statistikasi chiqadi.`;
 
   // start
   renderAll();
+  loadSkinsIfNeeded();
 </script>
 </body>
 </html>
