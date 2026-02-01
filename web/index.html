@@ -1,62 +1,279 @@
 <!doctype html>
 <html lang="uz">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CS2 O‘zbek Bazar</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    :root{
-      --bg:#0b1220; --card:#111b2e; --muted:#94a3b8; --text:#e5e7eb;
-      --accent:#22c55e; --danger:#ef4444; --border:#1f2a44;
+    :root {
+      --bg: #0b1220;
+      --card: #111b2e;
+      --muted: #94a3b8;
+      --text: #e5e7eb;
+      --accent: #22c55e;
+      --danger: #ef4444;
+      --border: #1f2a44;
     }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,Arial;background:var(--bg);color:var(--text)}
-    header{position:sticky;top:0;background:rgba(11,18,32,.9);backdrop-filter:blur(8px);
-      border-bottom:1px solid var(--border);padding:14px 16px;z-index:10}
-    .title{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}
-    .sub{font-size:12px;color:var(--muted);margin-top:4px}
-    .wrap{padding:14px 16px 90px;max-width:980px;margin:0 auto}
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    .search{flex:1;min-width:220px}
-    input,select,button,textarea{
-      width:100%; padding:12px 12px; border-radius:12px; border:1px solid var(--border);
-      background:var(--card); color:var(--text); outline:none;
+
+    * {
+      box-sizing: border-box
     }
-    button{cursor:pointer;font-weight:700}
-    .btn{background:var(--accent);border:0;color:#052e16}
-    .btn2{background:transparent;border:1px solid var(--border)}
-    .btnDanger{background:var(--danger);border:0}
-    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .chip{padding:6px 10px;border-radius:999px;border:1px solid var(--border);color:var(--muted);font-size:12px}
-    .grid{display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:12px;margin-top:14px}
-    @media (min-width:720px){.grid{grid-template-columns:repeat(3, minmax(0,1fr));}}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
-    .img{height:130px;background:#0f172a;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px}
-    .cardBody{padding:10px}
-    .name{font-weight:800;font-size:13px;line-height:1.2}
-    .meta{font-size:12px;color:var(--muted);margin-top:6px;display:flex;justify-content:space-between;gap:8px}
-    .price{font-size:13px;font-weight:900;margin-top:8px}
-    .fav{margin-top:10px;display:flex;gap:8px}
-    .tag{font-size:11px;border:1px solid var(--border);padding:3px 8px;border-radius:999px;color:var(--muted)}
-    nav{
-      position:fixed;left:0;right:0;bottom:0;background:rgba(11,18,32,.92);
-      border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 6px;z-index:20
+
+    body {
+      margin: 0;
+      font-family: system-ui, Arial;
+      background: var(--bg);
+      color: var(--text)
     }
-    nav button{width:auto;padding:10px 12px;border-radius:12px}
-    .hidden{display:none}
-    .sectionTitle{font-weight:900;margin:18px 0 10px}
-    .panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px}
-    .two{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:720px){.two{grid-template-columns:1fr 1fr}}
-    .small{font-size:12px;color:var(--muted)}
-    .hr{height:1px;background:var(--border);margin:12px 0}
-    .list{display:flex;flex-direction:column;gap:10px}
-    .item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px}
-    .itemTop{display:flex;justify-content:space-between;gap:10px}
-    .kbd{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted)}
+
+    header {
+      position: sticky;
+      top: 0;
+      background: rgba(11, 18, 32, .92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px;
+      z-index: 10
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px
+    }
+
+    .wrap {
+      padding: 14px 16px 90px;
+      max-width: 980px;
+      margin: 0 auto
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap
+    }
+
+    input,
+    select,
+    button,
+    textarea {
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      outline: none;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 800
+    }
+
+    .btn {
+      background: var(--accent);
+      border: 0;
+      color: #052e16
+    }
+
+    .btn2 {
+      background: transparent;
+      border: 1px solid var(--border)
+    }
+
+    .btnDanger {
+      background: var(--danger);
+      border: 0
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px
+    }
+
+    .chip {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px
+    }
+
+    @media (min-width:720px) {
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden
+    }
+
+    .img {
+      height: 130px;
+      background: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    .cardBody {
+      padding: 10px
+    }
+
+    .name {
+      font-weight: 900;
+      font-size: 13px;
+      line-height: 1.2
+    }
+
+    .meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px
+    }
+
+    .price {
+      font-size: 13px;
+      font-weight: 900;
+      margin-top: 8px
+    }
+
+    .fav {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px
+    }
+
+    .tag {
+      font-size: 11px;
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      border-radius: 999px;
+      color: var(--muted)
+    }
+
+    nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(11, 18, 32, .92);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 6px;
+      z-index: 20
+    }
+
+    nav button {
+      width: auto;
+      padding: 10px 12px;
+      border-radius: 12px
+    }
+
+    .hidden {
+      display: none
+    }
+
+    .sectionTitle {
+      font-weight: 1000;
+      margin: 18px 0 10px
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px
+    }
+
+    .two {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px
+    }
+
+    @media(min-width:720px) {
+      .two {
+        grid-template-columns: 1fr 1fr
+      }
+    }
+
+    .small {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5
+    }
+
+    .hr {
+      height: 1px;
+      background: var(--border);
+      margin: 12px 0
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px
+    }
+
+    .itemTop {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start
+    }
+
+    .kbd {
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 12px;
+      color: var(--muted)
+    }
   </style>
 </head>
+
 <body>
   <header>
     <div class="title">🛒 CS2 O‘zbek Bazar</div>
@@ -68,21 +285,29 @@
     <!-- HOME -->
     <section id="home">
       <div class="row">
-        <div class="search">
+        <div style="flex:1;min-width:220px">
           <input id="q" placeholder="Skin qidirish: masalan AWP, AK-47, Knife..." />
         </div>
         <div style="width:170px;min-width:170px">
           <select id="cat">
             <option value="">Kategoriya: Hammasi</option>
-            <option>AK-47</option><option>AWP</option><option>Knife</option><option>Gloves</option>
-            <option>Pistol</option><option>SMG</option><option>Rifle</option>
+            <option>AK-47</option>
+            <option>AWP</option>
+            <option>Knife</option>
+            <option>Gloves</option>
+            <option>Pistol</option>
+            <option>SMG</option>
+            <option>Rifle</option>
           </select>
         </div>
         <div style="width:170px;min-width:170px">
           <select id="wear">
             <option value="">Wear: Hammasi</option>
-            <option value="FN">FN</option><option value="MW">MW</option><option value="FT">FT</option>
-            <option value="WW">WW</option><option value="BS">BS</option>
+            <option value="FN">FN</option>
+            <option value="MW">MW</option>
+            <option value="FT">FT</option>
+            <option value="WW">WW</option>
+            <option value="BS">BS</option>
           </select>
         </div>
       </div>
@@ -90,10 +315,15 @@
       <div class="chips">
         <span class="chip">❤️ Sevimlilar saqlanadi</span>
         <span class="chip">🇺🇿 To‘liq o‘zbekcha</span>
-        <span class="chip">⚡ Tez qidiruv</span>
+        <span class="chip">💬 Ishonch uchun fikrlar</span>
       </div>
 
+      <div class="sectionTitle">🔥 Skinlar</div>
       <div id="grid" class="grid"></div>
+
+      <div class="sectionTitle">💬 Mijozlar fikri</div>
+      <div id="approvedReviews" class="list"></div>
+      <div id="noApproved" class="small hidden">Hozircha tasdiqlangan fikr yo‘q.</div>
     </section>
 
     <!-- FAVORITES -->
@@ -106,35 +336,53 @@
     <!-- PROFILE -->
     <section id="profile" class="hidden">
       <div class="sectionTitle">👤 Profil</div>
-      <div class="panel">
-        <div class="small">Mini app’ni botning <span class="kbd">Menu</span> tugmasi orqali ochasiz.</div>
-        <div class="hr"></div>
-        <button class="btn2" onclick="openAdminChat()">💬 Admin bilan bog‘lanish</button>
-        <div class="hr"></div>
 
-        <div class="sectionTitle" style="margin:0 0 8px">📌 Xizmat qanday ishlaydi?</div>
+      <div class="panel">
         <div class="small">
-          1) Skin tanlaysiz<br/>
-          2) Admin bilan bog‘lanasiz<br/>
-          3) Kelishuv va to‘lov<br/>
-          4) Trade orqali yetkazib beriladi
+          Mini app’ni botning <span class="kbd">Menu</span> tugmasi orqali ochasiz.
         </div>
 
         <div class="hr"></div>
+
+        <button class="btn2" onclick="openAdminChat()">💬 Admin bilan bog‘lanish</button>
+
+        <div class="hr"></div>
+
+        <div class="sectionTitle" style="margin:0 0 8px">✍️ Fikr qoldirish</div>
+        <div class="small">Fikringiz avval sizga ko‘rinadi, admin tasdiqlasa hammaga ko‘rinadi.</div>
+        <div style="height:10px"></div>
+        <textarea id="revText" placeholder="Masalan: Aziz, men skin oldim. Ishonsa bo‘ladi ✅"></textarea>
+        <div style="height:10px"></div>
+        <button class="btn" onclick="submitReview()">Yuborish</button>
+
+        <div class="hr"></div>
+
+        <!-- ADMIN ONLY -->
         <div id="adminGate" class="hidden">
           <div class="sectionTitle" style="margin:0 0 8px">👑 Admin Panel</div>
-          <div class="small">Faqat siz ko‘rasiz (Telegram ID tekshiriladi).</div>
+          <div class="small">Faqat siz ko‘rasiz (Telegram ID: 6100947342).</div>
+
           <div class="hr"></div>
 
           <div class="two">
             <div class="panel">
-              <div class="sectionTitle" style="margin:0 0 8px">📊 Statistika (demo)</div>
-              <div id="statsBox" class="small">Hozircha demo. Backend ulanganida real bo‘ladi.</div>
+              <div class="sectionTitle" style="margin:0 0 8px">💰 Kurs & ustama</div>
+              <div class="small">
+                White market USD → so‘m. Siz aytgandek: 126 000 so‘m / 10 USD = 12 600 so‘m (1 USD).
+              </div>
+              <div style="height:10px"></div>
+              <input id="usdRate" type="number" placeholder="1 USD nechchi so‘m? (default 12600)" />
+              <div style="height:10px"></div>
+              <input id="markup" type="number" placeholder="Ustama % (masalan 7)" />
+              <div style="height:10px"></div>
+              <button class="btn" onclick="savePricing()">Saqlash</button>
+              <div style="height:10px"></div>
+              <div id="pricingInfo" class="small"></div>
             </div>
 
             <div class="panel">
-              <div class="sectionTitle" style="margin:0 0 8px">🔧 Skin tahrirlash (demo)</div>
-              <div class="small">Skin tanlang → nom/rasm/narx o‘zgartiring.</div>
+              <div class="sectionTitle" style="margin:0 0 8px">🔧 Skin tahrirlash</div>
+              <div class="small">Skin tanlang → nom/rasm/usd narx o‘zgartiring. So‘m avtomatik hisoblanadi.</div>
               <div class="hr"></div>
               <select id="editPick"></select>
               <div style="height:10px"></div>
@@ -142,23 +390,27 @@
               <div style="height:10px"></div>
               <input id="editImg" placeholder="Rasm URL (ixtiyoriy)" />
               <div style="height:10px"></div>
-              <input id="editPrice" type="number" placeholder="Narx (so‘m)" />
+              <input id="editUsd" type="number" placeholder="White market narx (USD)" />
               <div style="height:10px"></div>
               <button class="btn" onclick="saveEdit()">Saqlash</button>
+              <div style="height:10px"></div>
+              <div class="small">Eslatma: bu hozircha localStorage’da saqlanadi (demo).</div>
             </div>
           </div>
 
-          <div style="height:12px"></div>
+          <div class="hr"></div>
 
           <div class="panel">
-            <div class="sectionTitle" style="margin:0 0 8px">💬 Fikrlar moderatsiyasi (demo)</div>
-            <div class="small">User fikri avval “pending”, siz tasdiqlasangiz hammaga ko‘rinadi.</div>
+            <div class="sectionTitle" style="margin:0 0 8px">✅ Fikrlar moderatsiyasi</div>
+            <div id="pendingReviews" class="list"></div>
+            <div id="noPending" class="small hidden">Pending fikr yo‘q.</div>
           </div>
         </div>
+
       </div>
     </section>
 
-    <!-- DETAIL MODAL (oddiy) -->
+    <!-- DETAIL -->
     <section id="detail" class="hidden">
       <div class="sectionTitle">🔎 Skin</div>
       <div class="panel">
@@ -167,13 +419,16 @@
         <div id="dName" class="name" style="font-size:16px"></div>
         <div id="dMeta" class="small" style="margin-top:6px"></div>
         <div id="dPrice" class="price"></div>
+
         <div style="height:10px"></div>
+
         <div class="row">
           <button class="btn2" onclick="toggleFav(currentId)">❤️ Sevimli</button>
-          <button class="btn" onclick="openAdminChat()">🛒 Sotib olish</button>
+          <button class="btn" onclick="buyNow()">🛒 Sotib olish</button>
         </div>
+
         <div style="height:10px"></div>
-        <button class="btn2" onclick="goHome()">⬅️ Orqaga</button>
+        <button class="btn2" onclick="show('home')">⬅️ Orqaga</button>
       </div>
     </section>
 
@@ -185,63 +440,89 @@
     <button class="btn2" onclick="show('profile')">👤</button>
   </nav>
 
-<script>
-  // ---------- Telegram ----------
-  const tg = window.Telegram?.WebApp;
-  if (tg) {
-    tg.expand();
-  }
+  <script>
+    // ---------- Telegram ----------
+    const tg = window.Telegram?.WebApp
+    if (tg) tg.expand()
 
-  const ADMIN_ID = 6100947342; // faqat sizga admin panel ko'rinadi
-  const user = tg?.initDataUnsafe?.user;
+    const ADMIN_ID = 6100947342 // admin
+    const user = tg?.initDataUnsafe?.user
 
-  document.getElementById('who').textContent =
-    user ? `@${user.username || 'user'} • ID: ${user.id}` : 'Telegram bilan oching';
+    document.getElementById('who').textContent =
+      user ? `@${user.username || 'user'} • ID: ${user.id}` : 'Telegram bilan oching'
 
-  // ---------- Demo data (keyin backend bilan almashtiramiz) ----------
-  // Narxlar hozir demo — keyin admin panel + backend bilan real bo'ladi
-  let skins = [
-    { id:'1', name:'AK-47 | Redline', cat:'AK-47', wear:'FT', price:134820, img:'' },
-    { id:'2', name:'AWP | Asiimov', cat:'AWP', wear:'FT', price:950000, img:'' },
-    { id:'3', name:'Karambit | Doppler', cat:'Knife', wear:'FN', price:8500000, img:'' },
-    { id:'4', name:'Driver Gloves | Lunar Weave', cat:'Gloves', wear:'MW', price:7200000, img:'' },
-    { id:'5', name:'USP-S | Kill Confirmed', cat:'Pistol', wear:'MW', price:1450000, img:'' },
-    { id:'6', name:'M4A1-S | Printstream', cat:'Rifle', wear:'FT', price:2100000, img:'' },
-  ];
+    // ---------- Storage keys ----------
+    const FKEY = 'cs2_uz_favs_v1'
+    const SKEY = 'cs2_uz_skins_v1'
+    const PKEY = 'cs2_uz_pricing_v1'
+    const RKEY = 'cs2_uz_reviews_v1'
 
-  // ---------- Favorites ----------
-  const FKEY = 'cs2_uzbek_favs_v1';
-  function loadFavs(){
-    try { return JSON.parse(localStorage.getItem(FKEY) || '[]'); } catch { return []; }
-  }
-  function saveFavs(arr){ localStorage.setItem(FKEY, JSON.stringify(arr)); }
-  function isFav(id){ return loadFavs().includes(id); }
-  function toggleFav(id){
-    const favs = loadFavs();
-    const idx = favs.indexOf(id);
-    if (idx >= 0) favs.splice(idx, 1); else favs.push(id);
-    saveFavs(favs);
-    renderAll();
-    if (currentId === id) renderDetail(id);
-  }
+    // ---------- Default data ----------
+    const defaultSkins = [
+      { id: '1', name: 'AK-47 | Redline', cat: 'AK-47', wear: 'FT', usd: 10, img: '' },
+      { id: '2', name: 'AWP | Asiimov', cat: 'AWP', wear: 'FT', usd: 75, img: '' },
+      { id: '3', name: 'Karambit | Doppler', cat: 'Knife', wear: 'FN', usd: 650, img: '' },
+      { id: '4', name: 'Driver Gloves | Lunar Weave', cat: 'Gloves', wear: 'MW', usd: 520, img: '' },
+      { id: '5', name: 'USP-S | Kill Confirmed', cat: 'Pistol', wear: 'MW', usd: 95, img: '' },
+      { id: '6', name: 'M4A1-S | Printstream', cat: 'Rifle', wear: 'FT', usd: 140, img: '' },
+    ]
 
-  // ---------- UI routing ----------
-  const sections = ['home','fav','profile','detail'];
-  function show(id){
-    sections.forEach(s => document.getElementById(s).classList.toggle('hidden', s !== id));
-    if (id === 'fav') renderFav();
-  }
-  function goHome(){ show('home'); }
+    const defaultPricing = {
+      usdRate: 12600,   // 126 000 / 10 USD
+      markup: 7         // % (siz xohlagandek keyin o'zgartirasiz)
+    }
 
-  // ---------- Render cards ----------
-  function fmtUZS(n){
-    try { return new Intl.NumberFormat('uz-UZ').format(n) + " so‘m"; }
-    catch { return n + " so‘m"; }
-  }
+    function loadJSON(key, fallback) {
+      try { return JSON.parse(localStorage.getItem(key) || '') || fallback }
+      catch { return fallback }
+    }
+    function saveJSON(key, value) {
+      localStorage.setItem(key, JSON.stringify(value))
+    }
 
-  function cardHTML(s){
-    const fav = isFav(s.id);
-    return `
+    let skins = loadJSON(SKEY, defaultSkins)
+    let pricing = loadJSON(PKEY, defaultPricing)
+    let reviews = loadJSON(RKEY, []) // {id, telegramId, username, text, status, at}
+
+    // ---------- Helpers ----------
+    function fmtUZS(n) {
+      try { return new Intl.NumberFormat('uz-UZ').format(n) + " so‘m" }
+      catch { return n + " so‘m" }
+    }
+    function calcUZS(usd) {
+      const rate = Number(pricing.usdRate) || 12600
+      const m = Number(pricing.markup) || 0
+      const base = usd * rate
+      return Math.round(base * (1 + m / 100))
+    }
+
+    function loadFavs() {
+      try { return JSON.parse(localStorage.getItem(FKEY) || '[]') } catch { return [] }
+    }
+    function saveFavs(arr) { localStorage.setItem(FKEY, JSON.stringify(arr)) }
+    function isFav(id) { return loadFavs().includes(id) }
+    function toggleFav(id) {
+      const favs = loadFavs()
+      const idx = favs.indexOf(id)
+      if (idx >= 0) favs.splice(idx, 1); else favs.push(id)
+      saveFavs(favs)
+      renderAll()
+      if (currentId === id) renderDetail(id)
+    }
+
+    // ---------- Routing ----------
+    const sections = ['home', 'fav', 'profile', 'detail']
+    function show(id) {
+      sections.forEach(s => document.getElementById(s).classList.toggle('hidden', s !== id))
+      if (id === 'fav') renderFav()
+      if (id === 'profile') renderAdmin()
+    }
+
+    // ---------- Render skins ----------
+    function cardHTML(s) {
+      const fav = isFav(s.id)
+      const uzs = calcUZS(Number(s.usd) || 0)
+      return `
       <div class="card">
         <div class="img">${s.img ? `<img src="${s.img}" style="width:100%;height:100%;object-fit:cover"/>` : 'Rasm'}</div>
         <div class="cardBody">
@@ -250,112 +531,245 @@
             <span class="tag">${s.cat}</span>
             <span class="tag">${s.wear}</span>
           </div>
-          <div class="price">${fmtUZS(s.price)}</div>
+          <div class="price">${fmtUZS(uzs)}</div>
           <div class="fav">
             <button class="btn2" onclick="openDetail('${s.id}')">Ko‘rish</button>
             <button class="${fav ? 'btnDanger' : 'btn2'}" onclick="toggleFav('${s.id}')">${fav ? '❤️' : '🤍'}</button>
           </div>
         </div>
       </div>
-    `;
-  }
+    `
+    }
 
-  function applyFilters(list){
-    const q = document.getElementById('q').value.trim().toLowerCase();
-    const cat = document.getElementById('cat').value;
-    const wear = document.getElementById('wear').value;
+    function applyFilters(list) {
+      const q = document.getElementById('q').value.trim().toLowerCase()
+      const cat = document.getElementById('cat').value
+      const wear = document.getElementById('wear').value
 
-    return list.filter(s => {
-      if (q && !(`${s.name} ${s.cat}`.toLowerCase().includes(q))) return false;
-      if (cat && s.cat !== cat) return false;
-      if (wear && s.wear !== wear) return false;
-      return true;
-    });
-  }
+      return list.filter(s => {
+        if (q && !(`${s.name} ${s.cat}`.toLowerCase().includes(q))) return false
+        if (cat && s.cat !== cat) return false
+        if (wear && s.wear !== wear) return false
+        return true
+      })
+    }
 
-  function renderHome(){
-    const grid = document.getElementById('grid');
-    const filtered = applyFilters(skins);
-    grid.innerHTML = filtered.map(cardHTML).join('') || `<div class="small">Hech narsa topilmadi.</div>`;
-  }
+    function renderHome() {
+      const grid = document.getElementById('grid')
+      const filtered = applyFilters(skins)
+      grid.innerHTML = filtered.map(cardHTML).join('') || `<div class="small">Hech narsa topilmadi.</div>`
+    }
 
-  function renderFav(){
-    const favGrid = document.getElementById('favGrid');
-    const favEmpty = document.getElementById('favEmpty');
-    const favs = loadFavs();
-    const list = skins.filter(s => favs.includes(s.id));
-    favEmpty.classList.toggle('hidden', list.length !== 0);
-    favGrid.innerHTML = list.map(cardHTML).join('');
-  }
+    function renderFav() {
+      const favGrid = document.getElementById('favGrid')
+      const favEmpty = document.getElementById('favEmpty')
+      const favs = loadFavs()
+      const list = skins.filter(s => favs.includes(s.id))
+      favEmpty.classList.toggle('hidden', list.length !== 0)
+      favGrid.innerHTML = list.map(cardHTML).join('')
+    }
 
-  // ---------- Detail ----------
-  let currentId = null;
-  function openDetail(id){
-    currentId = id;
-    renderDetail(id);
-    show('detail');
-  }
-  function renderDetail(id){
-    const s = skins.find(x => x.id === id);
-    if (!s) return;
-    document.getElementById('dImg').innerHTML = s.img ? `<img src="${s.img}" style="width:100%;height:100%;object-fit:cover;border-radius:12px"/>` : 'Rasm';
-    document.getElementById('dName').textContent = s.name;
-    document.getElementById('dMeta').textContent = `${s.cat} • Wear: ${s.wear}`;
-    document.getElementById('dPrice').textContent = fmtUZS(s.price);
-  }
+    // ---------- Detail ----------
+    let currentId = null
+    function openDetail(id) {
+      currentId = id
+      renderDetail(id)
+      show('detail')
+    }
+    function renderDetail(id) {
+      const s = skins.find(x => x.id === id)
+      if (!s) return
+      document.getElementById('dImg').innerHTML = s.img ? `<img src="${s.img}" style="width:100%;height:100%;object-fit:cover;border-radius:12px"/>` : 'Rasm'
+      document.getElementById('dName').textContent = s.name
+      document.getElementById('dMeta').textContent = `${s.cat} • Wear: ${s.wear} • White: $${Number(s.usd) || 0}`
+      document.getElementById('dPrice').textContent = fmtUZS(calcUZS(Number(s.usd) || 0))
+    }
 
-  // ---------- Admin chat ----------
-  function openAdminChat(){
-    // siz bergan admin link
-    const url = "https://t.me/saiddakkbar";
-    if (tg) tg.openTelegramLink(url);
-    else window.open(url, "_blank");
-  }
+    // ---------- Admin chat ----------
+    function openAdminChat(prefillText) {
+      const url = "https://t.me/saiddakkbar"
+      // Telegram WebApp ichida text bilan ochish 100% kafolat emas,
+      // lekin ko'p holatda ishlaydi; ishlamasa ham admin chat ochiladi.
+      const withText = prefillText ? `${url}?text=${encodeURIComponent(prefillText)}` : url
+      if (tg) tg.openTelegramLink(withText)
+      else window.open(withText, "_blank")
+    }
 
-  // ---------- Admin Panel (faqat siz) ----------
-  const adminGate = document.getElementById('adminGate');
-  const isAdmin = user && user.id === ADMIN_ID;
-  adminGate.classList.toggle('hidden', !isAdmin);
+    function buyNow() {
+      const s = skins.find(x => x.id === currentId)
+      if (!s) return
+      const uzs = fmtUZS(calcUZS(Number(s.usd) || 0))
+      const uname = user?.username ? '@' + user.username : '(username yo‘q)'
+      const uid = user?.id ? user.id : '(id yo‘q)'
+      const msg =
+        `Salom admin!
+🛒 Skin: ${s.name}
+🏷 Kategoriya: ${s.cat} (${s.wear})
+💰 Narx: ${uzs}
+👤 User: ${uname} | ID: ${uid}
 
-  // Edit dropdown fill
-  function fillEditPick(){
-    const sel = document.getElementById('editPick');
-    sel.innerHTML = skins.map(s => `<option value="${s.id}">${s.name} (${fmtUZS(s.price)})</option>`).join('');
-    sel.onchange = () => loadEdit(sel.value);
-    if (skins[0]) loadEdit(skins[0].id);
-  }
-  function loadEdit(id){
-    const s = skins.find(x => x.id === id);
-    if (!s) return;
-    document.getElementById('editName').value = s.name;
-    document.getElementById('editImg').value = s.img || '';
-    document.getElementById('editPrice').value = s.price;
-  }
-  function saveEdit(){
-    const id = document.getElementById('editPick').value;
-    const s = skins.find(x => x.id === id);
-    if (!s) return;
-    s.name = document.getElementById('editName').value.trim() || s.name;
-    s.img = document.getElementById('editImg').value.trim();
-    const p = Number(document.getElementById('editPrice').value);
-    if (!Number.isNaN(p) && p > 0) s.price = p;
+Olishni xohlayman.`
+      openAdminChat(msg)
+    }
+
+    // ---------- Reviews ----------
+    function submitReview() {
+      const text = document.getElementById('revText').value.trim()
+      if (!text) return alert("Matn yozing.")
+
+      const item = {
+        id: String(Date.now()),
+        telegramId: user?.id || null,
+        username: user?.username || '',
+        text,
+        status: 'pending',
+        at: new Date().toISOString()
+      }
+      reviews.unshift(item)
+      saveJSON(RKEY, reviews)
+
+      document.getElementById('revText').value = ''
+      alert("✅ Yuborildi. Admin tasdiqlasa hammaga ko‘rinadi.")
+      renderAll()
+    }
+
+    function renderApprovedReviews() {
+      const box = document.getElementById('approvedReviews')
+      const none = document.getElementById('noApproved')
+      const approved = reviews.filter(r => r.status === 'approved')
+      none.classList.toggle('hidden', approved.length !== 0)
+      box.innerHTML = approved.slice(0, 8).map(r => `
+      <div class="item">
+        <div class="itemTop">
+          <div>
+            <div style="font-weight:900">Mijoz</div>
+            <div class="small">${escapeHTML(r.text)}</div>
+          </div>
+          <div class="small">${new Date(r.at).toLocaleDateString()}</div>
+        </div>
+      </div>
+    `).join('')
+    }
+
+    function escapeHTML(s) {
+      return (s || '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+    }
+
+    // ---------- Admin panel ----------
+    const adminGate = document.getElementById('adminGate')
+    const isAdmin = user && user.id === ADMIN_ID
+    adminGate.classList.toggle('hidden', !isAdmin)
+
+    function renderAdmin() {
+      if (!isAdmin) return
+
+      // pricing inputs
+      document.getElementById('usdRate').value = pricing.usdRate
+      document.getElementById('markup').value = pricing.markup
+      document.getElementById('pricingInfo').textContent =
+        `Hozir: 1 USD = ${pricing.usdRate} so‘m, ustama = ${pricing.markup}%`
+
+      // edit pick
+      const sel = document.getElementById('editPick')
+      sel.innerHTML = skins.map(s => `<option value="${s.id}">${s.name} ($${s.usd})</option>`).join('')
+      sel.onchange = () => loadEdit(sel.value)
+      if (skins[0]) loadEdit(skins[0].id)
+
+      // pending reviews
+      renderPending()
+    }
+
+    function savePricing() {
+      const rate = Number(document.getElementById('usdRate').value)
+      const mk = Number(document.getElementById('markup').value)
+      pricing.usdRate = (Number.isFinite(rate) && rate > 0) ? Math.round(rate) : 12600
+      pricing.markup = (Number.isFinite(mk) && mk >= 0) ? mk : 0
+      saveJSON(PKEY, pricing)
+      document.getElementById('pricingInfo').textContent =
+        `Saqlandi ✅ 1 USD = ${pricing.usdRate} so‘m, ustama = ${pricing.markup}%`
+      renderAll()
+    }
+
+    function loadEdit(id) {
+      const s = skins.find(x => x.id === id)
+      if (!s) return
+      document.getElementById('editName').value = s.name
+      document.getElementById('editImg').value = s.img || ''
+      document.getElementById('editUsd').value = s.usd
+    }
+
+    function saveEdit() {
+      const id = document.getElementById('editPick').value
+      const s = skins.find(x => x.id === id)
+      if (!s) return
+
+      const nm = document.getElementById('editName').value.trim()
+      const im = document.getElementById('editImg').value.trim()
+      const usd = Number(document.getElementById('editUsd').value)
+
+      if (nm) s.name = nm
+      s.img = im
+      if (Number.isFinite(usd) && usd > 0) s.usd = usd
+
+      saveJSON(SKEY, skins)
+      alert("✅ Skin saqlandi (demo).")
+      renderAll()
+    }
+
+    function renderPending() {
+      const box = document.getElementById('pendingReviews')
+      const none = document.getElementById('noPending')
+      const pending = reviews.filter(r => r.status === 'pending')
+      none.classList.toggle('hidden', pending.length !== 0)
+
+      box.innerHTML = pending.map(r => `
+      <div class="item">
+        <div class="itemTop">
+          <div>
+            <div style="font-weight:900">Pending fikr</div>
+            <div class="small">${escapeHTML(r.text)}</div>
+            <div class="small">User: ${r.username ? '@' + r.username : '(yo‘q)'} | ID: ${r.telegramId || '(yo‘q)'}</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-direction:column;min-width:120px">
+            <button class="btn" onclick="approveReview('${r.id}')">✅ Tasdiq</button>
+            <button class="btnDanger" onclick="rejectReview('${r.id}')">❌ Rad</button>
+          </div>
+        </div>
+      </div>
+    `).join('')
+    }
+
+    function approveReview(id) {
+      const r = reviews.find(x => x.id === id)
+      if (!r) return
+      r.status = 'approved'
+      saveJSON(RKEY, reviews)
+      renderAll()
+    }
+
+    function rejectReview(id) {
+      const r = reviews.find(x => x.id === id)
+      if (!r) return
+      r.status = 'rejected'
+      saveJSON(RKEY, reviews)
+      renderAll()
+    }
+
+    // ---------- Events ----------
+    document.getElementById('q').addEventListener('input', renderHome)
+    document.getElementById('cat').addEventListener('change', renderHome)
+    document.getElementById('wear').addEventListener('change', renderHome)
+
+    function renderAll() {
+      renderHome()
+      renderFav()
+      renderApprovedReviews()
+      renderAdmin()
+      if (currentId) renderDetail(currentId)
+    }
 
     renderAll();
-    alert("✅ Saqlandi (demo). Keyin backendga bog‘laymiz.");
-  }
-
-  function renderAll(){
-    renderHome();
-    renderFav();
-    if (isAdmin) fillEditPick();
-  }
-
-  // ---------- Events ----------
-  document.getElementById('q').addEventListener('input', renderHome);
-  document.getElementById('cat').addEventListener('change', renderHome);
-  document.getElementById('wear').addEventListener('change', renderHome);
-
-  renderAll();
-</script>
+  </script>
 </body>
+
 </html>
